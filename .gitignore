@@ -1,0 +1,29 @@
+# Dependencias y módulos generados
+/node_modules
+
+# Archivos y directorios específicos de entorno de desarrollo
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.*.local
+
+# Construcción y salida de la aplicación
+/build
+/dist
+
+# Archivos generados por editor/IDE
+/.vscode
+/.idea
+
+# Archivos de registro
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Otros archivos generados
+*.log
+*.sqlite
+*.swp
+.DS_Store

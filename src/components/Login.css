@@ -1,0 +1,17 @@
+/* Login.css */
+.login-container {
+  margin: 0 auto;
+  max-width: 400px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background: #fff;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.login-button {
+  width: 100%;
+}
