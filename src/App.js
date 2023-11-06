@@ -1,51 +1,34 @@
-import { useState } from 'react';
 import './App.css';
-import Name from './Name';
-import NewNameForm from './NewNameForm';
+import { useState } from 'react';
 import Login from './components/Login';
+import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-dom';
 
 function App() {
-
-  const [name, setName] = useState({
-    name:undefined,
-    last_name:undefined
-  });
-
-  function fetchNameHandler() {
-    fetch('http://127.0.0.1:5000/simulator')
-    .then((response) => {
-      return response.json(); //Si aquí hay un error, quiere decir que el back-end está mal.
-    })
-    .then((data) => { //Lambda en JS
-      setName(data);
-    })
-  }
-
-  async function addName (name) {
-    console.log(name);
-    const response = await fetch('http://127.0.0.1:5000/add_name', {
-      method:'POST',
-      body: JSON.stringify(name),
-      headers: {
-        'Content-Type':'application/json'
-      }
-    });
-    const data = await response.json();
-    console.log(data);
-    if (data.error !== undefined) {
-      alert("ERROR! " + data.error);
-    } else {
-      alert("Name added!");
-    }
-  }
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <Login />
-      </header>
-    </div>
+    <Router>
+      <div>
+        <header className="App-header">
+          <Routes>
+            <Route path="/" element={<PrivateRoute component={Home} />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </header>
+      </div>
+    </Router>
   );
+}
+
+function PrivateRoute({ component: Component, ...rest }) {
+  const access_token = localStorage.getItem('access_token');
+  if (access_token) {
+    return <Component {...rest} />;
+  } else {
+    return <Navigate to="/login" />;
+  }
+}
+
+function Home() {
+  return <h1>Página de inicio</h1>;
 }
 
 export default App;
