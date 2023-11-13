@@ -56,7 +56,7 @@ const AuthProvider = ({ children }) => {
     const user = jwtDecode(token);
     dispatch({
       type: 'LOGIN',
-      payload: user,
+      payload: user.sub,
     });
   };
 

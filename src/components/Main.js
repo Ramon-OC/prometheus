@@ -19,14 +19,6 @@ const AppComponent = () => {
       <Header />
       <div className="content-container">
         <NavBar />
-        <div className="user-info">
-          {user && (
-            <div className="user-greeting">
-              <span>Bienvenido, {user.name}</span>
-              <button onClick={logout}>Cerrar Sesión</button>
-            </div>
-          )}
-        </div>
         <Routes>
           <Route path="/" element={<Home />} />
         </Routes>

@@ -1,5 +1,5 @@
 header {
-  background-color: #463F57;
+  background-color: #463f57;
   color: white;
   padding: 10px;
   text-align: center;
@@ -10,8 +10,66 @@ header {
   height: 120px;
 }
 
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-container {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .logo-container img {
   max-width: 99px;
   height: auto;
 }
 
+.user-container {
+  position: relative;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.user-menu {
+  position: absolute;
+  color: black;
+  top: 100%;
+  right: 0;
+  left: auto;
+  width: 250px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+
+.menu-item {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  text-align: left;
+}
+
+.menu-item:hover {
+  background-color: #f5f5f5;
+}
+
+.user-name {
+  font-weight: bold;
+}
