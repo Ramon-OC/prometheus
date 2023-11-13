@@ -1,15 +1,23 @@
 import './Login.css';
 import api from '../api';
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../AuthProvider';
+import { useNavigate, Navigate } from 'react-router-dom';
 
 function Login() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { user, login } = useAuth();
+
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -23,7 +31,7 @@ function Login() {
       const response = await api.post('/login', formData)
       if (response.status >= 200 && response.status < 300) {
         setError('');
-        localStorage.setItem('access_token', response.data.access_token);
+        login(response.data.access_token);
         console.info('Inicio de sesión exitoso', response.data);
         navigate('/');
       }
@@ -41,35 +49,37 @@ function Login() {
 
   return (
     <div className="login-container">
-      <h1>Iniciar sesión</h1>
-      {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Usuario:</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            className="form-control"
-            value={formData.email}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Contraseña:</label>
-          <input
-            type="password"
-            name="password"
-            placeholder="Contraseña"
-            className="form-control"
-            value={formData.password}
-            onChange={handleInputChange}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary login-button">
-          Iniciar sesión
-        </button>
-      </form>
+      <div className="login-box">
+        <h1>Iniciar sesión</h1>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>Usuario:</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              className="form-control"
+              value={formData.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="form-group">
+            <label>Contraseña:</label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Contraseña"
+              className="form-control"
+              value={formData.password}
+              onChange={handleInputChange}
+            />
+          </div>
+          <button type="submit" className="btn btn-primary login-button">
+            Iniciar sesión
+          </button>
+          {error && <p className="error-message">{error}</p>}
+        </form>
+      </div>
     </div>
   );
 }

@@ -1,30 +1,21 @@
-import './App.css';
-import { useState } from 'react';
+import React from 'react';
+import Main from './components/Main';
 import Login from './components/Login';
-import { BrowserRouter as Router, Route, Navigate, Routes } from 'react-router-dom';
+import PrivateRoute from './PrivateRoute';
+import { AuthProvider } from './AuthProvider';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-function App() {
+const App = () => {
   return (
-    <Router>
-      <div>
-        <header className="App-header">
-          <Routes>
-            <Route path="/" element={<PrivateRoute component={Home} />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
-        </header>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/*" element={<Main />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
   );
-}
-
-function PrivateRoute({ component: Component, ...rest }) {
-  const access_token = localStorage.getItem('access_token');
-  if (access_token) {
-    return <Component {...rest} />;
-  } else {
-    return <Navigate to="/login" />;
-  }
 }
 
 function Home() {

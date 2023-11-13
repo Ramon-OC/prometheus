@@ -1,0 +1,29 @@
+.nav-item {
+  text-decoration: none;
+  color: #463F57;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 240px;
+  margin: 0 20px;
+}
+
+.nav-label {
+  font-size: 20px;
+  text-align: center;
+  white-space: pre-line;
+  background-color: #ddd;
+  border-radius: 32px;
+  padding: 15px;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.nav-item.active .nav-label {
+  background-color: #A1A1A1;
+}
+
+.nav-item svg {
+  font-size: 24px;
+  margin-bottom: 20px;
+}

@@ -1,0 +1,33 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+}
+
+.user-info {
+  position: absolute;
+  right: 0;
+}
+
+.user-info span {
+  margin-right: 10px;
+}
+
+.user-info button {
+  background-color: transparent;
+  border: none;
+  color: black;
+  cursor: pointer;
+}
+
+.user-greeting {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}

@@ -1,0 +1,17 @@
+header {
+  background-color: #463F57;
+  color: white;
+  padding: 10px;
+  text-align: center;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  height: 120px;
+}
+
+.logo-container img {
+  max-width: 99px;
+  height: auto;
+}
+
