@@ -8,6 +8,7 @@ import { CSmartTable } from '@coreui/react-pro'
 import '@coreui/coreui/dist/css/coreui.min.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import moment from 'moment';
+import DataTable from './DataTable';
 
 const columns = [
   {
@@ -15,7 +16,7 @@ const columns = [
     label: '',
     filter: false,
     sorter: false,
-    _style: { width: '10%' },
+    _style: { width: '1%' },
   },
   {
     key: 'name',
@@ -43,7 +44,25 @@ const columns = [
     filter: false,
     sorter: false,
   },
-]
+];
+
+const scopedColumns = {
+  avatar: (item) => (
+    <td><CAvatar src={`/avatar.jpg`} size="large" alt="Avatar" shape="rounded"/></td>
+  ),
+  created_at: (item) => (
+    <td>{ moment(item.created_at).format("YYYY-MM-DD HH:mm:ss") }</td>
+  ),
+  status: (item) => (
+    <td>
+      <CBadge color={getBadge(item.created_at)}>{item.created_at ? "Activo" : "Inactivo"}</CBadge>
+    </td>
+  ),
+};
+
+const getBadge = (status) => {
+  return status ? 'success' : 'primary';
+}
 
 const Administrators = () => {
   const [showModal, setShowModal] = useState(false);
@@ -100,51 +119,17 @@ const Administrators = () => {
     }
   };
 
-  const getBadge = (status) => {
-    return status ? 'success' : 'primary';
-  }
-
   return (
     <Container className="mt-5">
       <ToastContainer />
-      <Row>
-        <Col md={8} className="d-flex align-items-cneter">
-          <h2>Listado de Administradores</h2>
-        </Col>
-        <Col md={4} className="d-flex align-items-center">
-          <Button variant="primary" size="lg" className="w-100" onClick={handleModalShow}>Agregar</Button>
-        </Col>
-      </Row>
-
-      <Row className="mt-3">
-        <Col md={12}>
-          <CCard>
-            <CCardBody>
-              <CSmartTable
-                loading={showLoading}
-                items={admins}
-                columns={columns}
-                tableFilter
-                itemsPerPageSelect
-                itemsPerPage={5}
-                scopedColumns={{
-                  avatar: (item) => (
-                    <td><CAvatar src={`/avatar.jpg`} size="large" alt="Avatar" shape="rounded"/></td>
-                  ),
-                  created_at: (item) => (
-                    <td>{ moment(item.created_at).format("YYYY-MM-DD HH:mm:ss") }</td>
-                  ),
-                  status: (item) => (
-                    <td>
-                      <CBadge color={getBadge(item.created_at)}>{item.created_at ? "Activo" : "Inactivo"}</CBadge>
-                    </td>
-                  ),
-                }}
-              />
-            </CCardBody>
-          </CCard>
-        </Col>
-      </Row>
+      <DataTable
+        handleModalShow={handleModalShow}
+        showLoading={showLoading}
+        items={admins}
+        columns={columns}
+        scopedColumns={scopedColumns}
+        title="Listado de Administradores"
+      />
 
       <Modal show={showModal} onHide={handleModalClose} centered>
         <Modal.Header closeButton>
