@@ -1,8 +1,10 @@
+import './App.css';
 import React from 'react';
 import Main from './components/Main';
 import Login from './components/Login';
 import PrivateRoute from './PrivateRoute';
 import { AuthProvider } from './AuthProvider';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 const App = () => {

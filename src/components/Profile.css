@@ -1,0 +1,45 @@
+.perfil-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px; 
+  align-items: center;
+  margin-top: 40px;
+}
+
+.perfil-imagen {
+  max-width: 200px;
+  margin-right: 40px;
+}
+
+.perfil-datos form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  width: 400px;
+}
+
+.perfil-datos label {
+  margin-bottom: 5px;
+}
+
+.perfil-datos input {
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 8px;
+}
+
+.perfil-datos .editar-boton {
+  align-self: flex-end;
+  width: 100%;
+  margin-top: 20px;
+  background-color: #463f57;
+  color: #ffffff;
+  border: none;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.perfil-datos .editar-boton:hover {
+  background-color: #2980b9;
+}

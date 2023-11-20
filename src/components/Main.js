@@ -1,11 +1,13 @@
+import './Main.css';
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider, useAuth } from '../AuthProvider';
-import PrivateRoute from '../PrivateRoute';
+import Home from './Home';
 import Header from './Header';
 import NavBar from './NavBar';
-import Home from './Home';
-import './Main.css';
+import Profile from './Profile';
+import PrivateRoute from '../PrivateRoute';
+import Administrators from './Administrators';
+import { AuthProvider, useAuth } from '../AuthProvider';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 const AppComponent = () => {
   const { user, logout } = useAuth();
@@ -21,6 +23,8 @@ const AppComponent = () => {
         <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/administrators" element={<Administrators />} />
         </Routes>
       </div>
     </div>
