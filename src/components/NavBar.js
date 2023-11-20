@@ -6,11 +6,11 @@ import { FaTrophy, FaUser, FaUsers, FaUserShield, FaUserFriends } from 'react-ic
 const NavBar = () => {
   return (
     <nav className="navbar">
+      <NavItem path="/profile" icon={<FaUser />} label="Información Personal" />
       <NavItem path="/administrators" icon={<FaUserShield />} label="Administradores" />
       <NavItem path="/participants" icon={<FaUserFriends />} label="Participantes" />
-      <NavItem path="/profile" icon={<FaUser />} label="Información Personal" />
-      <NavItem path="/friends" icon={<FaUsers />} label="Amigos" />
       <NavItem path="/tournaments" icon={<FaTrophy />} label="Torneos" />
+      <NavItem path="/friends" icon={<FaUsers />} label="Amigos" />
     </nav>
   );
 };

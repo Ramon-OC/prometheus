@@ -1,4 +1,4 @@
-import { CSmartTable } from '@coreui/react-pro'
+import { CSmartTable } from '@coreui/react-pro';
 import { CCard, CCardBody } from '@coreui/react';
 import { Button, Row, Col } from 'react-bootstrap';
 

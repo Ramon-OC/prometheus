@@ -44,13 +44,3 @@
   background-color: #463f57 !important;
   color: #ffffff !important;
 }
-
-label {
-  margin-bottom: 5px;
-}
-
-input {
-  border: 1px solid #ccc;
-  border-radius: 20px;
-  padding: 8px;
-}
