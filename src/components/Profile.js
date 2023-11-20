@@ -1,9 +1,9 @@
 import './Profile.css';
 import api from '../api';
 import { useAuth } from '../AuthProvider';
+import { Container } from 'react-bootstrap';
 import { FaUserCircle } from 'react-icons/fa';
 import React, { useEffect, useState } from 'react';
-import { Modal, Button, Container, Row, Col } from 'react-bootstrap';
 
 const Perfil = () => {
   const { user } = useAuth();

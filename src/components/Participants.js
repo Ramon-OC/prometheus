@@ -3,8 +3,8 @@ import moment from 'moment';
 import DataTable from './DataTable';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { CAvatar, CBadge } from '@coreui/react';
 import '@coreui/coreui/dist/css/coreui.min.css';
+import { CAvatar, CBadge } from '@coreui/react';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Modal, Button, Container } from 'react-bootstrap';
@@ -63,11 +63,11 @@ const getBadge = (status) => {
   return status ? 'success' : 'primary';
 }
 
-const Administrators = () => {
+const Participants = () => {
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setLoading] = useState(false);
-  const [admins, setAdmins] = useState([]);
-  const [adminData, setAdminData] = useState({
+  const [participants, setParticipants] = useState([]);
+  const [participantData, setParticipantData] = useState({
     name: '',
     email: '',
   });
@@ -77,17 +77,17 @@ const Administrators = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setAdminData({ ...adminData, [name]: value });
+    setParticipantData({ ...participantData, [name]: value });
   };
 
-  const getAdmins = async () => {
+  const getParticipants = async () => {
     try {
       setLoading(true);
-      const response = await api.get('/admin');
+      const response = await api.get('/participant');
       if (response.status === 200) {
-        setAdmins(response.data);
+        setParticipants(response.data);
       } else {
-        console.error("Error al obtener administradores");
+        console.error("Error al obtener participantes");
       }
       setLoading(false);
     } catch (error) {
@@ -96,7 +96,7 @@ const Administrators = () => {
   };
 
   useEffect(() => {
-    getAdmins();
+    getParticipants();
   }, []);
   
 
@@ -104,17 +104,17 @@ const Administrators = () => {
     e.preventDefault();
 
     try {
-      await api.post('/admin', adminData);
-      toast.success('Administrador agregado con éxito');
+      await api.post('/participant', participantData);
+      toast.success('Participante agregado con éxito');
       setShowModal(false);
-      setAdminData({
+      setParticipantData({
         name: '',
         email: '',
       });
-      getAdmins();
+      getParticipants();
     } catch (error) {
-      console.error("Error al agregar administrador:", error);
-      toast.error('Error al agregar administrador');
+      console.error("Error al agregar participante:", error);
+      toast.error('Error al agregar participante');
     }
   };
 
@@ -124,23 +124,23 @@ const Administrators = () => {
       <DataTable
         handleModalShow={handleModalShow}
         showLoading={showLoading}
-        items={admins}
+        items={participants}
         columns={columns}
         scopedColumns={scopedColumns}
-        title="Listado de Administradores"
+        title="Listado de Participantes"
       />
 
       <Modal show={showModal} onHide={handleModalClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title>Agregar Administrador</Modal.Title>
+          <Modal.Title>Agregar Participante</Modal.Title>
         </Modal.Header>
         <Modal.Body>
         <form onSubmit={handleSubmit}>
           <label>Nombre:</label>
-          <input type="text" name="name" value={adminData.name} onChange={handleInputChange} />
+          <input type="text" name="name" value={participantData.name} onChange={handleInputChange} />
           
           <label>Email:</label>
-          <input type="email" name="email" value={adminData.email} onChange={handleInputChange} />
+          <input type="email" name="email" value={participantData.email} onChange={handleInputChange} />
         </form>
         </Modal.Body>
         <Modal.Footer>
@@ -152,4 +152,4 @@ const Administrators = () => {
   );
 };
 
-export default Administrators;
+export default Participants;
