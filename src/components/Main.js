@@ -1,6 +1,5 @@
 import './Main.css';
 import React from 'react';
-import Home from './Home';
 import Header from './Header';
 import NavBar from './NavBar';
 import Profile from './Profile';
@@ -23,7 +22,6 @@ const MainComponent = () => {
       <div className="content-container">
         <NavBar />
         <Routes>
-          <Route path="/" element={<Home />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/tournaments" element={<Tournaments />} />
           <Route path="/participants" element={<Participants />} />

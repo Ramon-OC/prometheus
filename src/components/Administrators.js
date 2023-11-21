@@ -3,11 +3,11 @@ import moment from 'moment';
 import DataTable from './DataTable';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
-import { CAvatar, CBadge } from '@coreui/react';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Modal, Button, Container } from 'react-bootstrap';
+import { Modal, Button, Container, Form } from 'react-bootstrap';
+import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
 
 const columns = [
   {
@@ -91,6 +91,7 @@ const Administrators = () => {
       }
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error('Error de red:;', error);
     }
   };
@@ -104,15 +105,18 @@ const Administrators = () => {
     e.preventDefault();
 
     try {
-      await api.post('/admin', adminData);
-      toast.success('Administrador agregado con éxito');
+      setLoading(true);
+      const response = await api.post('/admin', adminData);
+      toast.success(`Administrador ${response.data.name} agregado con éxito`);
       setShowModal(false);
       setAdminData({
         name: '',
         email: '',
       });
       getAdmins();
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error("Error al agregar administrador:", error);
       toast.error('Error al agregar administrador');
     }
@@ -135,16 +139,23 @@ const Administrators = () => {
           <Modal.Title>Agregar Administrador</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <form onSubmit={handleSubmit}>
-          <label>Nombre:</label>
-          <input type="text" name="name" value={adminData.name} onChange={handleInputChange} />
-          
-          <label>Email:</label>
-          <input type="email" name="email" value={adminData.email} onChange={handleInputChange} />
-        </form>
+        <Form>
+          <Form.Group className="mb-3 w-100" controlId="admin-name">
+            <Form.Label>Nombre</Form.Label>
+            <Form.Control type="text" name="name" value={adminData.name} onChange={handleInputChange} />
+          </Form.Group>
+
+          <Form.Group className="mb-3 w-100" controlId="admin-email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" name="email" value={adminData.email} onChange={handleInputChange} />
+          </Form.Group>
+        </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleSubmit}>Guardar</Button>
+          <CButton color="primary" onClick={handleSubmit} disabled={showLoading}>
+            {showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
+            {showLoading ? "Guardando..." : "Guardar"}
+          </CButton>
           <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
         </Modal.Footer>
       </Modal>

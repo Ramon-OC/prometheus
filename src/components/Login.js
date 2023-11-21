@@ -33,7 +33,7 @@ function Login() {
         setError('');
         login(response.data.access_token);
         console.info('Inicio de sesión exitoso', response.data);
-        navigate('/');
+        navigate('/profile');
       }
     } catch (error) {
       console.log("error", error.response);

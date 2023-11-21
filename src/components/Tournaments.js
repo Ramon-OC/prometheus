@@ -4,11 +4,10 @@ import DataTable from './DataTable';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { CAvatar, CBadge } from '@coreui/react';
-import { CDatePicker } from '@coreui/react-pro';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Modal, Button, Container, Form } from 'react-bootstrap';
+import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
 
 const columns = [
   {
@@ -120,6 +119,7 @@ const Tournaments = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       const response = await api.post('/tournament', tournamentData);
       toast.success(`Torneo ${response.data.name} agregado con éxito`);
       setShowModal(false);
@@ -128,6 +128,7 @@ const Tournaments = () => {
         start_date: '',
         end_date: '',
       });
+      setLoading(false);
       getTournaments();
     } catch (error) {
       console.error("Error al agregar torneo:", error);
@@ -170,7 +171,10 @@ const Tournaments = () => {
         </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleSubmit}>Guardar</Button>
+          <CButton color="primary" onClick={handleSubmit} disabled={showLoading}>
+            {showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
+            {showLoading ? "Guardando..." : "Guardar"}
+          </CButton>
           <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
         </Modal.Footer>
       </Modal>

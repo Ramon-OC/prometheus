@@ -4,10 +4,10 @@ import DataTable from './DataTable';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
-import { CAvatar, CBadge } from '@coreui/react';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Modal, Button, Container } from 'react-bootstrap';
+import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
 
 const columns = [
   {
@@ -91,6 +91,7 @@ const Participants = () => {
       }
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       console.error('Error de red:;', error);
     }
   };
@@ -104,6 +105,7 @@ const Participants = () => {
     e.preventDefault();
 
     try {
+      setLoading(true);
       await api.post('/participant', participantData);
       toast.success('Participante agregado con éxito');
       setShowModal(false);
@@ -111,8 +113,10 @@ const Participants = () => {
         name: '',
         email: '',
       });
+      setLoading(false);
       getParticipants();
     } catch (error) {
+      setLoading(false);
       console.error("Error al agregar participante:", error);
       toast.error('Error al agregar participante');
     }
@@ -144,7 +148,10 @@ const Participants = () => {
         </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="primary" onClick={handleSubmit}>Guardar</Button>
+          <CButton color="primary" onClick={handleSubmit} disabled={!showLoading}>
+            {!showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
+            {!showLoading ? "Guardando..." : "Guardar"}
+          </CButton>
           <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
         </Modal.Footer>
       </Modal>
