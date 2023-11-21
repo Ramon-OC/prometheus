@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Modal, Button, Container } from 'react-bootstrap';
+import { Modal, Button, Container, Form } from 'react-bootstrap';
 import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
 
 const columns = [
@@ -106,8 +106,8 @@ const Participants = () => {
 
     try {
       setLoading(true);
-      await api.post('/participant', participantData);
-      toast.success('Participante agregado con éxito');
+      const response = await api.post('/participant', participantData);
+      toast.success(`Participante ${response.data.name} agregado con éxito`);
       setShowModal(false);
       setParticipantData({
         name: '',
@@ -139,18 +139,22 @@ const Participants = () => {
           <Modal.Title>Agregar Participante</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <form onSubmit={handleSubmit}>
-          <label>Nombre:</label>
-          <input type="text" name="name" value={participantData.name} onChange={handleInputChange} />
-          
-          <label>Email:</label>
-          <input type="email" name="email" value={participantData.email} onChange={handleInputChange} />
-        </form>
+        <Form>
+          <Form.Group className="mb-3 w-100" controlId="participant-name">
+            <Form.Label>Nombre</Form.Label>
+            <Form.Control type="text" name="name" value={participantData.name} onChange={handleInputChange} />
+          </Form.Group>
+
+          <Form.Group className="mb-3 w-100" controlId="participant-email">
+            <Form.Label>Email</Form.Label>
+            <Form.Control type="email" name="email" value={participantData.email} onChange={handleInputChange} />
+          </Form.Group>
+        </Form>
         </Modal.Body>
         <Modal.Footer>
-          <CButton color="primary" onClick={handleSubmit} disabled={!showLoading}>
-            {!showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
-            {!showLoading ? "Guardando..." : "Guardar"}
+          <CButton color="primary" onClick={handleSubmit} disabled={showLoading}>
+            {showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
+            {showLoading ? "Guardando..." : "Guardar"}
           </CButton>
           <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
         </Modal.Footer>
