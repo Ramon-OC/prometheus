@@ -1,9 +1,11 @@
 import api from '../api';
 import moment from 'moment';
 import DataTable from './DataTable';
+import { FaTrash } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
+import DeleteAdminModal from './DeleteAdminModal';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import { Modal, Button, Container, Form } from 'react-bootstrap';
@@ -33,11 +35,12 @@ const columns = [
     _style: { width: '20%' },
   },
   { 
-    key: 'status',
+    key: 'deleted_at',
+    label: "Estatus",
     _style: { width: '10%' }
   },
   {
-    key: 'show_details',
+    key: 'actions',
     label: 'Acciones',
     _style: { width: '10%' },
     filter: false,
@@ -45,28 +48,16 @@ const columns = [
   },
 ];
 
-const scopedColumns = {
-  avatar: (item) => (
-    <td><CAvatar src={`/avatar.jpg`} size="large" alt="Avatar" shape="rounded"/></td>
-  ),
-  created_at: (item) => (
-    <td>{ moment(item.created_at).format("YYYY-MM-DD HH:mm:ss") }</td>
-  ),
-  status: (item) => (
-    <td>
-      <CBadge color={getBadge(item.created_at)}>{item.created_at ? "Activo" : "Inactivo"}</CBadge>
-    </td>
-  ),
-};
-
 const getBadge = (status) => {
-  return status ? 'success' : 'primary';
+  return status ? 'danger' : 'success';
 }
 
 const Administrators = () => {
+  const [admins, setAdmins] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setLoading] = useState(false);
-  const [admins, setAdmins] = useState([]);
+  const [adminToDelete, setAdminToDelete] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [adminData, setAdminData] = useState({
     name: '',
     email: '',
@@ -74,11 +65,25 @@ const Administrators = () => {
 
   const handleModalShow = () => setShowModal(true);
   const handleModalClose = () => setShowModal(false);
+  const handleShowDeleteModal = (admin) => {
+    setAdminToDelete(admin);
+    setShowDeleteModal(true);
+  };
+  const handleCloseDeleteModal = () => {
+    setAdminToDelete(null);
+    setShowDeleteModal(false);
+    getAdmins();
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setAdminData({ ...adminData, [name]: value });
   };
+
+  const handleDelete = () => {
+    console.log("Admin", adminToDelete);
+    handleCloseDeleteModal();
+  }
 
   const getAdmins = async () => {
     try {
@@ -122,6 +127,27 @@ const Administrators = () => {
     }
   };
 
+  const scopedColumns = {
+    avatar: (item) => (
+      <td><CAvatar src={`/avatar.jpg`} size="large" alt="Avatar" shape="rounded"/></td>
+    ),
+    created_at: (item) => (
+      <td>{ moment(item.created_at).format("YYYY-MM-DD HH:mm:ss") }</td>
+    ),
+    deleted_at: (item) => (
+      <td>
+        <CBadge color={getBadge(item.deleted_at)}>{item.deleted_at ? "Eliminado" : "Activo"}</CBadge>
+      </td>
+    ),
+    actions: (item) => (
+      <td>
+        {!item.deleted_at && (<CButton color="danger" size="sm" onClick={() => handleShowDeleteModal(item)}>
+          <FaTrash />
+        </CButton>)}
+      </td>
+    ),
+  };
+
   return (
     <Container className="mt-5">
       <ToastContainer />
@@ -159,6 +185,12 @@ const Administrators = () => {
           <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
         </Modal.Footer>
       </Modal>
+
+      <DeleteAdminModal
+        show={showDeleteModal}
+        handleClose={handleCloseDeleteModal}
+        handleDelete={handleDelete}
+        admin={adminToDelete}/>
     </Container>
   );
 };
