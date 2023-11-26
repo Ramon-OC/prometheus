@@ -1,11 +1,13 @@
 import api from '../api';
 import moment from 'moment';
 import DataTable from './DataTable';
+import { FaTrash } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import DeleteTournamentModal from './DeleteTournamentModal';
 import { Modal, Button, Container, Form } from 'react-bootstrap';
 import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
 
@@ -42,7 +44,7 @@ const columns = [
     _style: { width: '10%' }
   },
   {
-    key: 'show_details',
+    key: 'actions',
     label: 'Acciones',
     _style: { width: '10%' },
     filter: false,
@@ -50,35 +52,18 @@ const columns = [
   },
 ];
 
-const scopedColumns = {
-  avatar: (item) => (
-    <td><CAvatar src={`/avatar.jpg`} size="large" alt="Avatar" shape="rounded"/></td>
-  ),
-  created_at: (item) => (
-    <td>{ moment(item.created_at).format("YYYY-MM-DD HH:mm:ss") }</td>
-  ),
-  start_date: (item) => (
-    <td>{ moment(item.start_date).format("YYYY-MM-DD HH:mm:ss") }</td>
-  ),
-  end_date: (item) => (
-    <td>{ moment(item.end_date).format("YYYY-MM-DD HH:mm:ss") }</td>
-  ),
-  status: (item) => (
-    <td>
-      <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
-    </td>
-  ),
-};
-
 const getBadge = (status) => {
   if (status === "Pendiente") return "primary";
   if (status === "En progreso") return "success";
-  if (status === "Concluido") return "danger";
+  if (status === "Concluido") return "info";
+  if (status === "Eliminado") return "danger";
 }
 
 const Tournaments = () => {
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setLoading] = useState(false);
+  const [tournamentToDelete, setTournamentToDelete] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [tournaments, setTournaments] = useState([]);
   const [tournamentData, setTournamentData] = useState({
     name: '',
@@ -88,11 +73,25 @@ const Tournaments = () => {
 
   const handleModalShow = () => setShowModal(true);
   const handleModalClose = () => setShowModal(false);
+  const handleShowDeleteModal = (tournament) => {
+    setTournamentToDelete(tournament);
+    setShowDeleteModal(true);
+  };
+  const handleCloseDeleteModal = () => {
+    setTournamentToDelete(null);
+    setShowDeleteModal(false);
+    getTournaments();
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTournamentData({ ...tournamentData, [name]: value });
   };
+
+  const handleDelete = () => {
+    console.log("Tournament", tournamentToDelete);
+    handleCloseDeleteModal();
+  }
 
   const getTournaments = async () => {
     try {
@@ -134,6 +133,33 @@ const Tournaments = () => {
       console.error("Error al agregar torneo:", error);
       toast.error('Error al agregar torneo');
     }
+  };
+
+  const scopedColumns = {
+    avatar: (item) => (
+      <td><CAvatar src={`/avatar.jpg`} size="large" alt="Avatar" shape="rounded"/></td>
+    ),
+    created_at: (item) => (
+      <td>{ moment(item.created_at).format("YYYY-MM-DD HH:mm:ss") }</td>
+    ),
+    start_date: (item) => (
+      <td>{ moment(item.start_date).format("YYYY-MM-DD HH:mm:ss") }</td>
+    ),
+    end_date: (item) => (
+      <td>{ moment(item.end_date).format("YYYY-MM-DD HH:mm:ss") }</td>
+    ),
+    status: (item) => (
+      <td>
+        <CBadge color={getBadge(item.status)}>{item.status}</CBadge>
+      </td>
+    ),
+    actions: (item) => (
+      <td>
+        {!item.deleted_at && (<CButton color="danger" size="sm" onClick={() => handleShowDeleteModal(item)}>
+          <FaTrash />
+        </CButton>)}
+      </td>
+    ),
   };
 
   return (
@@ -178,6 +204,12 @@ const Tournaments = () => {
           <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
         </Modal.Footer>
       </Modal>
+
+      <DeleteTournamentModal
+        show={showDeleteModal}
+        handleClose={handleCloseDeleteModal}
+        handleDelete={handleDelete}
+        tournament={tournamentToDelete}/>
     </Container>
   );
 };
