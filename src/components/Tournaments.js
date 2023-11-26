@@ -1,15 +1,15 @@
 import api from '../api';
 import moment from 'moment';
 import DataTable from './DataTable';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaEdit } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import DeleteTournamentModal from './DeleteTournamentModal';
-import { Modal, Button, Container, Form } from 'react-bootstrap';
 import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
+import { Modal, Button, Container, Form, InputGroup } from 'react-bootstrap';
 
 const columns = [
   {
@@ -60,15 +60,16 @@ const getBadge = (status) => {
 }
 
 const Tournaments = () => {
+  const [rules, setRules] = useState(['']);
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setLoading] = useState(false);
-  const [tournamentToDelete, setTournamentToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [tournamentToDelete, setTournamentToDelete] = useState(null);
   const [tournaments, setTournaments] = useState([]);
   const [tournamentData, setTournamentData] = useState({
     name: '',
-    start_date: '',
     end_date: '',
+    start_date: '',
   });
 
   const handleModalShow = () => setShowModal(true);
@@ -89,7 +90,6 @@ const Tournaments = () => {
   };
 
   const handleDelete = () => {
-    console.log("Tournament", tournamentToDelete);
     handleCloseDeleteModal();
   }
 
@@ -119,6 +119,7 @@ const Tournaments = () => {
 
     try {
       setLoading(true);
+      tournamentData.rules = rules;
       const response = await api.post('/tournament', tournamentData);
       toast.success(`Torneo ${response.data.name} agregado con éxito`);
       setShowModal(false);
@@ -130,6 +131,7 @@ const Tournaments = () => {
       setLoading(false);
       getTournaments();
     } catch (error) {
+      setLoading(false);
       console.error("Error al agregar torneo:", error);
       toast.error('Error al agregar torneo');
     }
@@ -158,8 +160,27 @@ const Tournaments = () => {
         {!item.deleted_at && (<CButton color="danger" size="sm" onClick={() => handleShowDeleteModal(item)}>
           <FaTrash />
         </CButton>)}
+        {!item.deleted_at && (<CButton color="info" size="sm" onClick={() => handleShowDeleteModal(item)}>
+          <FaEdit/>
+        </CButton>)}
       </td>
     ),
+  };
+
+  const addRule = () => {
+    setRules([...rules, '']);
+  };
+
+  const deleteRule = (index) => {
+    const newRules = [...rules];
+    newRules.splice(index, 1);
+    setRules(newRules);
+  };
+
+  const handleChangeRule = (index, value) => {
+    const newRules = [...rules];
+    newRules[index] = value;
+    setRules(newRules);
   };
 
   return (
@@ -174,7 +195,7 @@ const Tournaments = () => {
         title="Listado de Torneos"
       />
 
-      <Modal show={showModal} onHide={handleModalClose} centered>
+      <Modal show={showModal} onHide={handleModalClose} centered scrollable>
         <Modal.Header closeButton>
           <Modal.Title>Agregar Torneo</Modal.Title>
         </Modal.Header>
@@ -194,6 +215,24 @@ const Tournaments = () => {
             <Form.Label>Fecha de finalización</Form.Label>
             <Form.Control type="datetime-local" name="end_date" value={tournamentData.end_date} onChange={handleInputChange} />
           </Form.Group>
+
+          {rules.map((rule, index) => (
+            <div key={index} className="mb-3 w-100">
+              <Form.Label>{`Regla ${index + 1}`}</Form.Label>
+              <InputGroup>
+                <Form.Control type="text" value={rule} onChange={(e) => handleChangeRule(index, e.target.value)} />
+                <InputGroup.Text style={{ height: "38px" }}>
+                  <Button variant="outline-secondary" style={{ fontSize: "10px" }} onClick={() => deleteRule(index)}>
+                    &#10006;
+                  </Button>
+                </InputGroup.Text>
+              </InputGroup>
+            </div>
+          ))}
+
+          <div className="d-flex justify-content-end">
+            <CButton color="primary" onClick={addRule}>Agregar Regla</CButton>
+          </div>
         </Form>
         </Modal.Body>
         <Modal.Footer>
