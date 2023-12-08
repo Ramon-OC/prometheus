@@ -1,9 +1,7 @@
 import api from '../api';
-import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import { CButton } from '@coreui/react';
-import { FaTrash } from 'react-icons/fa';
-import { notifySuccess, notifyError } from '../notificationUtils';
+import { notifyError } from '../notificationUtils';
 
 const DeleteUserModal = ({ show, handleClose, handleDelete, user }) => {
   if (!user) return null;

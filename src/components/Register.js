@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Container, Form, Row, Col } from 'react-bootstrap';
+import { Button, Container, Form } from 'react-bootstrap';
 import Header from './Header';
 import { ToastContainer, toast } from 'react-toastify';
 import api from '../api';
@@ -13,8 +13,6 @@ const Register = () => {
     surname: '',
     email: '',
   });
-
-  const [error, setError] = useState('');
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -90,7 +88,6 @@ const Register = () => {
                 <Form.Control.Feedback type="invalid">Por favor, ingresa un email valido.</Form.Control.Feedback>
               </Form.Group>
               <Button type="submit" className="w-100 mt-4">Registrarse</Button>
-              {error && <p className="error-message">{error}</p>}
             </Form>
           </div>
         </div>

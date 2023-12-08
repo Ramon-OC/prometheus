@@ -5,9 +5,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import { Modal, Button, Container, Form } from 'react-bootstrap';
-import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
+import { ToastContainer } from 'react-toastify';
+import { Container } from 'react-bootstrap';
+import { CAvatar, CBadge } from '@coreui/react';
 
 const columns = [
   {
@@ -64,21 +64,8 @@ const getBadge = (status) => {
 }
 
 const Participants = () => {
-  const [showModal, setShowModal] = useState(false);
   const [showLoading, setLoading] = useState(false);
   const [participants, setParticipants] = useState([]);
-  const [participantData, setParticipantData] = useState({
-    name: '',
-    email: '',
-  });
-
-  const handleModalShow = () => setShowModal(true);
-  const handleModalClose = () => setShowModal(false);
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setParticipantData({ ...participantData, [name]: value });
-  };
 
   const getParticipants = async () => {
     try {
@@ -100,28 +87,6 @@ const Participants = () => {
     getParticipants();
   }, []);
   
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-      const response = await api.post('/participant', participantData);
-      toast.success(`Participante ${response.data.name} agregado con éxito`);
-      setShowModal(false);
-      setParticipantData({
-        name: '',
-        email: '',
-      });
-      setLoading(false);
-      getParticipants();
-    } catch (error) {
-      setLoading(false);
-      console.error("Error al agregar participante:", error);
-      toast.error('Error al agregar participante');
-    }
-  };
-
   return (
     <Container className="mt-5">
       <ToastContainer />

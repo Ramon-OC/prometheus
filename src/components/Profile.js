@@ -2,7 +2,7 @@ import './Profile.css';
 import api from '../api';
 import { useAuth } from '../AuthProvider';
 import React, { useEffect, useState } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import { FaUserCircle, FaCamera } from 'react-icons/fa';
 import { notifySuccess, notifyError } from '../notificationUtils';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
