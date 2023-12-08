@@ -22,7 +22,7 @@ const Header = () => {
             <img src="/avatar.jpg" alt="Avatar" />
             {menuVisible && (
               <div className="user-menu">
-                <div className="menu-item user-name">{user.name}</div>
+                <div className="menu-item user-name">{user.full_name}</div>
                 <div className="menu-item" onClick={logout}>
                   <FaSignOutAlt /> Cerrar Sesión
                 </div>

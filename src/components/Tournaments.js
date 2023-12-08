@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import EditTournamentModal from './EditTournamentModal';
 import DeleteTournamentModal from './DeleteTournamentModal';
 import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
 import { Modal, Button, Container, Form, InputGroup } from 'react-bootstrap';
@@ -60,16 +61,22 @@ const getBadge = (status) => {
 }
 
 const Tournaments = () => {
-  const [rules, setRules] = useState(['']);
   const [showModal, setShowModal] = useState(false);
   const [showLoading, setLoading] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [tournamentToEdit, setTournamentToEdit] = useState(null);
   const [tournamentToDelete, setTournamentToDelete] = useState(null);
   const [tournaments, setTournaments] = useState([]);
   const [tournamentData, setTournamentData] = useState({
     name: '',
+    rules: [''],
+    console: '',
+    image: null,
     end_date: '',
+    videogame: '',
     start_date: '',
+    participants_number: '',
   });
 
   const handleModalShow = () => setShowModal(true);
@@ -78,9 +85,18 @@ const Tournaments = () => {
     setTournamentToDelete(tournament);
     setShowDeleteModal(true);
   };
+  const handleShowEditModal = (tournament) => {
+    setTournamentToEdit(tournament);
+    setShowEditModal(true);
+  };
   const handleCloseDeleteModal = () => {
     setTournamentToDelete(null);
     setShowDeleteModal(false);
+    getTournaments();
+  };
+  const handleCloseEditModal = () => {
+    setTournamentToEdit(null);
+    setShowEditModal(false);
     getTournaments();
   };
 
@@ -91,6 +107,10 @@ const Tournaments = () => {
 
   const handleDelete = () => {
     handleCloseDeleteModal();
+  }
+
+  const handleEdit = () => {
+    handleCloseEditModal();
   }
 
   const getTournaments = async () => {
@@ -119,14 +139,18 @@ const Tournaments = () => {
 
     try {
       setLoading(true);
-      tournamentData.rules = rules;
       const response = await api.post('/tournament', tournamentData);
       toast.success(`Torneo ${response.data.name} agregado con éxito`);
       setShowModal(false);
       setTournamentData({
         name: '',
-        start_date: '',
+        rules: [''],
+        console: '',
+        image: null,
         end_date: '',
+        videogame: '',
+        start_date: '',
+        participants_number: '',
       });
       setLoading(false);
       getTournaments();
@@ -160,7 +184,7 @@ const Tournaments = () => {
         {!item.deleted_at && (<CButton color="danger" size="sm" onClick={() => handleShowDeleteModal(item)}>
           <FaTrash />
         </CButton>)}
-        {!item.deleted_at && (<CButton color="info" size="sm" onClick={() => handleShowDeleteModal(item)}>
+        {!item.deleted_at && (<CButton color="info" size="sm" onClick={() => handleShowEditModal(item)}>
           <FaEdit/>
         </CButton>)}
       </td>
@@ -168,19 +192,19 @@ const Tournaments = () => {
   };
 
   const addRule = () => {
-    setRules([...rules, '']);
+    setTournamentData({ ...tournamentData, rules: [...tournamentData.rules, ''] });
   };
 
   const deleteRule = (index) => {
-    const newRules = [...rules];
+    const newRules = [...tournamentData.rules];
     newRules.splice(index, 1);
-    setRules(newRules);
+    setTournamentData({ ...tournamentData, rules: newRules });
   };
 
-  const handleChangeRule = (index, value) => {
-    const newRules = [...rules];
-    newRules[index] = value;
-    setRules(newRules);
+  const handleChangeRules = (e, index) => {
+    const newRules = [...tournamentData.rules];
+    newRules[index] = e.target.value;
+    setTournamentData({ ...tournamentData, rules: newRules });
   };
 
   return (
@@ -201,26 +225,41 @@ const Tournaments = () => {
         </Modal.Header>
         <Modal.Body>
         <Form>
-          <Form.Group className="mb-3 w-100" controlId="participant-name">
+          <Form.Group className="mb-3 w-100" controlId="name">
             <Form.Label>Nombre</Form.Label>
             <Form.Control type="text" name="name" value={tournamentData.name} onChange={handleInputChange} />
           </Form.Group>
 
-          <Form.Group className="mb-3 w-100" controlId="participant-start">
+          <Form.Group className="mb-3 w-100" controlId="console">
+            <Form.Label>Consola</Form.Label>
+            <Form.Control type="text" name="console" value={tournamentData.console} onChange={handleInputChange} />
+          </Form.Group>
+
+          <Form.Group className="mb-3 w-100" controlId="videogame">
+            <Form.Label>Videojuego</Form.Label>
+            <Form.Control type="text" name="videogame" value={tournamentData.videogame} onChange={handleInputChange} />
+          </Form.Group>
+
+          <Form.Group className="mb-3 w-100" controlId="participants_number">
+            <Form.Label>No. Participantes</Form.Label>
+            <Form.Control type="number" name="participants_number" value={tournamentData.participants_number} onChange={handleInputChange} />
+          </Form.Group>
+
+          <Form.Group className="mb-3 w-100" controlId="start_date">
             <Form.Label>Fecha de inicio</Form.Label>
             <Form.Control type="datetime-local" name="start_date" value={tournamentData.start_date} onChange={handleInputChange} />
           </Form.Group>
 
-          <Form.Group className="mb-3 w-100" controlId="participant-end">
+          <Form.Group className="mb-3 w-100" controlId="end_date">
             <Form.Label>Fecha de finalización</Form.Label>
             <Form.Control type="datetime-local" name="end_date" value={tournamentData.end_date} onChange={handleInputChange} />
           </Form.Group>
 
-          {rules.map((rule, index) => (
+          {tournamentData.rules.map((rule, index) => (
             <div key={index} className="mb-3 w-100">
               <Form.Label>{`Regla ${index + 1}`}</Form.Label>
               <InputGroup>
-                <Form.Control type="text" value={rule} onChange={(e) => handleChangeRule(index, e.target.value)} />
+                <Form.Control type="text" value={rule} onChange={(e) => handleChangeRules(e, index)} />
                 <InputGroup.Text style={{ height: "38px" }}>
                   <Button variant="outline-secondary" style={{ fontSize: "10px" }} onClick={() => deleteRule(index)}>
                     &#10006;
@@ -243,6 +282,12 @@ const Tournaments = () => {
           <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
         </Modal.Footer>
       </Modal>
+
+      {showEditModal && <EditTournamentModal
+        show={showEditModal}
+        toggle={handleCloseEditModal}
+        onSave={handleEdit}
+        tournament={tournamentToEdit}/>}
 
       <DeleteTournamentModal
         show={showDeleteModal}

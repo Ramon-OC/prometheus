@@ -12,6 +12,11 @@ api.interceptors.request.use((config) => {
     config.headers['Authorization'] = `Bearer ${token}`;
   }
 
+  if (config.data instanceof FormData) {
+    console.log("FormData", config.data);
+    config.headers['Content-Type'] = 'multipart/form-data';
+  }
+
   return config;
 });
 
