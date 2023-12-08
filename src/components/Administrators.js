@@ -1,14 +1,14 @@
 import api from '../api';
 import moment from 'moment';
 import DataTable from './DataTable';
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaUser } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
 import DeleteAdminModal from './DeleteAdminModal';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import { Modal, Button, Container, Form } from 'react-bootstrap';
+import { Modal, Button, Container, Form, Row, Col } from 'react-bootstrap';
 import { CAvatar, CBadge, CButton, CSpinner } from '@coreui/react';
 
 const columns = [
@@ -20,7 +20,7 @@ const columns = [
     _style: { width: '1%' },
   },
   {
-    key: 'name',
+    key: 'full_name',
     label: 'Nombre',
     _style: { width: '30%' },
   },
@@ -59,8 +59,12 @@ const Administrators = () => {
   const [adminToDelete, setAdminToDelete] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [adminData, setAdminData] = useState({
-    name: '',
+    username: '',
+    firstname: '',
+    lastname: '',
+    surname: '',
     email: '',
+    role: 'Administrador',
   });
 
   const handleModalShow = () => setShowModal(true);
@@ -90,6 +94,7 @@ const Administrators = () => {
       setLoading(true);
       const response = await api.get('/admin');
       if (response.status === 200) {
+        console.log("Users", response.data);
         setAdmins(response.data);
       } else {
         console.error("Error al obtener administradores");
@@ -112,11 +117,15 @@ const Administrators = () => {
     try {
       setLoading(true);
       const response = await api.post('/admin', adminData);
-      toast.success(`Administrador ${response.data.name} agregado con éxito`);
+      toast.success(`Administrador ${response.data.full_name} agregado con éxito`);
       setShowModal(false);
       setAdminData({
-        name: '',
+        username: '',
+        firstname: '',
+        lastname: '',
+        surname: '',
         email: '',
+        role: 'Administrador',
       });
       getAdmins();
       setLoading(false);
@@ -129,7 +138,7 @@ const Administrators = () => {
 
   const scopedColumns = {
     avatar: (item) => (
-      <td><CAvatar src={`/avatar.jpg`} size="large" alt="Avatar" shape="rounded"/></td>
+      <td><CAvatar src={item.avatar || "avatar.jpg"} size="large" alt="Avatar" shape="rounded" /></td>
     ),
     created_at: (item) => (
       <td>{ moment(item.created_at).format("YYYY-MM-DD HH:mm:ss") }</td>
@@ -165,24 +174,48 @@ const Administrators = () => {
           <Modal.Title>Agregar Administrador</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-        <Form>
-          <Form.Group className="mb-3 w-100" controlId="admin-name">
-            <Form.Label>Nombre</Form.Label>
-            <Form.Control type="text" name="name" value={adminData.name} onChange={handleInputChange} />
-          </Form.Group>
-
-          <Form.Group className="mb-3 w-100" controlId="admin-email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" name="email" value={adminData.email} onChange={handleInputChange} />
-          </Form.Group>
-        </Form>
+          <Form>
+            <Form.Group className="mb-3 w-100" controlId="username">
+              <Form.Label>Username</Form.Label>
+              <Form.Control type="text" name="username" value={adminData.username} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group className="mb-3 w-100" controlId="firstname">
+              <Form.Label>Nombre(s)</Form.Label>
+              <Form.Control type="text" name="firstname" value={adminData.firstname} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group className="mb-3 w-100" controlId="lastname">
+              <Form.Label>Apellido Paterno</Form.Label>
+              <Form.Control type="text" name="lastname" value={adminData.lastname} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group className="mb-3 w-100" controlId="surname">
+              <Form.Label>Apellido Materno</Form.Label>
+              <Form.Control type="text" name="surname" value={adminData.surname} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group className="mb-3 w-100" controlId="email">
+              <Form.Label>Email</Form.Label>
+              <Form.Control type="email" name="email" value={adminData.email} onChange={handleInputChange} />
+            </Form.Group>
+            <Form.Group className="mb-3 w-100" controlId="role">
+              <Form.Label>Rol</Form.Label>
+                <Form.Control as="select" name="role" value={adminData.role} onChange={handleInputChange}>
+                  <option value="admin">Administrador</option>
+                  <option value="superadmin">Super Administrador</option>
+                </Form.Control>
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
-          <CButton color="primary" onClick={handleSubmit} disabled={showLoading}>
-            {showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
-            {showLoading ? "Guardando..." : "Guardar"}
-          </CButton>
-          <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
+          <Row className="justify-content-end">
+            <Col md={6}>
+              <Button variant="primary" onClick={handleSubmit} disabled={showLoading} className="w-100">
+                {showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
+                {showLoading ? "Guardando..." : "Guardar"}
+              </Button>
+            </Col>
+            <Col md={6}>
+              <Button variant="secondary" onClick={handleModalClose} className="w-100">Cerrar</Button>
+            </Col>
+          </Row>
         </Modal.Footer>
       </Modal>
 

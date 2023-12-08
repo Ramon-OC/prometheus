@@ -19,7 +19,7 @@ const Header = () => {
         </div>
         <div className="user-container">
           <div className="user-avatar" onClick={toggleMenu}>
-            <img src="/avatar.jpg" alt="Avatar" />
+            <img src={user.avatar || "avatar.jpg"} alt="Avatar" />
             {menuVisible && (
               <div className="user-menu">
                 <div className="menu-item user-name">{user.full_name}</div>
