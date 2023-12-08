@@ -25,7 +25,6 @@ const Perfil = () => {
     const obtenerPerfil = async () => {
       try {
         const respuesta = await api.get(`/profile/${user.id}`);
-        console.log("Response", respuesta);
         if (respuesta.status === 200) {
           setFormData(respuesta.data);
           setOriginalFormData(respuesta.data);
@@ -53,7 +52,6 @@ const Perfil = () => {
       formDataToSend.append('surname', formData.surname);
       formDataToSend.append('avatar', formData.avatar);
       const response = await api.post(`/user/${formData.id}`, formDataToSend);
-      console.log("Response", response);
       if (response.status === 200) {
         setEditing(false);
         setOriginalFormData({ ...response.data });
@@ -61,7 +59,6 @@ const Perfil = () => {
       }
     } catch (error) {
       notifyError(`Error al editar el perfil ${formData.firstname}`);
-      console.error('Error al editar el perfil', error);
     }
   };
 
@@ -71,7 +68,6 @@ const Perfil = () => {
   };
 
   const handleEdit = () => {
-    console.log("Editing");
     setEditing(true);
     setOriginalFormData({ ...formData });
   };
@@ -87,20 +83,9 @@ const Perfil = () => {
   };
 
   const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setAvatarPreview(reader.result);
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    } else {
-      setAvatarPreview(null);
-    }
-
-    setFormData({ ...formData, avatar: file });
+    const newAvatar = e.target.files[0];
+    setFormData({ ...formData, avatar: newAvatar });
+    setAvatarPreview(newAvatar ? URL.createObjectURL(newAvatar) : null);
   };
 
   if (!formData) {
@@ -115,7 +100,7 @@ const Perfil = () => {
             <div className="perfil-imagen position-relative text-center pt-4">
               {avatarPreview || formData.avatar ? (
                 <img
-                  src={avatarPreview || URL.createObjectURL(formData.avatar)}
+                  src={avatarPreview || formData.avatar}
                   alt="Foto de perfil"
                   className="img-fluid rounded-circle"
                   style={{ width: '200px', height: '200px' }}
