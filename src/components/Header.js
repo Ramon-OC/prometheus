@@ -17,7 +17,7 @@ const Header = () => {
         <div className="logo-container">
           <img src="/Prometheus.png" alt="Logo" />
         </div>
-        <div className="user-container">
+        { user && (<div className="user-container">
           <div className="user-avatar" onClick={toggleMenu}>
             <img src={user.avatar || "avatar.jpg"} alt="Avatar" />
             {menuVisible && (
@@ -29,7 +29,7 @@ const Header = () => {
               </div>
             )}
           </div>
-        </div>
+        </div>) }
       </div>
     </header>
   );

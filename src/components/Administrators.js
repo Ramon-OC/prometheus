@@ -1,7 +1,7 @@
 import api from '../api';
 import moment from 'moment';
 import DataTable from './DataTable';
-import { FaTrash, FaUser } from 'react-icons/fa';
+import { FaTrash, FaCheck } from 'react-icons/fa';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'react-toastify/dist/ReactToastify.css';
 import '@coreui/coreui/dist/css/coreui.min.css';
@@ -64,7 +64,7 @@ const Administrators = () => {
     lastname: '',
     surname: '',
     email: '',
-    role: 'Administrador',
+    role: 'admin',
   });
 
   const handleModalShow = () => setShowModal(true);
@@ -125,7 +125,7 @@ const Administrators = () => {
         lastname: '',
         surname: '',
         email: '',
-        role: 'Administrador',
+        role: 'admin',
       });
       getAdmins();
       setLoading(false);
@@ -152,6 +152,9 @@ const Administrators = () => {
       <td>
         {!item.deleted_at && (<CButton color="danger" size="sm" onClick={() => handleShowDeleteModal(item)}>
           <FaTrash />
+        </CButton>)}
+        {item.deleted_at && (<CButton color="success" size="sm" onClick={() => handleShowDeleteModal(item)}>
+          <FaCheck />
         </CButton>)}
       </td>
     ),

@@ -9,9 +9,9 @@ const DataTable = ({ handleModalShow, showLoading, items, columns, scopedColumns
         <Col md={8} className="d-flex align-items-cneter">
           <h2>{title}</h2>
         </Col>
-        <Col md={4} className="d-flex align-items-center">
+        { handleModalShow && (<Col md={4} className="d-flex align-items-center">
           <Button variant="primary" size="lg" className="w-100" onClick={handleModalShow}>Agregar</Button>
-        </Col>
+        </Col>)}
       </Row>
   
       <Row className="mt-3">

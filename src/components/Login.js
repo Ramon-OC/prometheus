@@ -3,6 +3,8 @@ import api from '../api';
 import React, { useState } from 'react';
 import { useAuth } from '../AuthProvider';
 import { useNavigate, Navigate } from 'react-router-dom';
+import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import Header from './Header';
 
 function Login() {
   const [formData, setFormData] = useState({
@@ -15,7 +17,7 @@ function Login() {
   const { user, login } = useAuth();
 
   if (user) {
-    return <Navigate to="/" />;
+    return <Navigate to="/profile" />;
   }
 
 
@@ -48,39 +50,48 @@ function Login() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h1>Iniciar sesión</h1>
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Usuario:</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="Email"
-              className="form-control"
-              value={formData.email}
-              onChange={handleInputChange}
-            />
+    <>
+      <Header />
+      <div className="login-container">
+        <div className="login-box">
+          <div className="text-center mb-4">
+            <h1 className="font-weight-bold text-dark">Iniciar sesión</h1>
           </div>
-          <div className="form-group">
-            <label>Contraseña:</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Contraseña"
-              className="form-control"
-              value={formData.password}
-              onChange={handleInputChange}
-            />
-          </div>
-          <button type="submit" className="btn btn-primary login-button">
-            Iniciar sesión
-          </button>
-          {error && <p className="error-message">{error}</p>}
-        </form>
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label>Usuario:</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                className="form-control"
+                value={formData.email}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Contraseña:</label>
+              <input
+                type="password"
+                name="password"
+                placeholder="Contraseña"
+                className="form-control"
+                value={formData.password}
+                onChange={handleInputChange}
+              />
+            </div>
+            <Button type="submit" variant="primary" className="btn btn-primary login-button mt-4">
+              Iniciar sesión
+            </Button>
+            {error && <p className="error-message">{error}</p>}
+          </form>
+          <p className="pt-4 text-center">
+            ¿No tienes una cuenta?{' '}
+            <a href="/registro">Regístrate aquí</a>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

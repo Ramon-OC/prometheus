@@ -2,13 +2,17 @@ import './Profile.css';
 import api from '../api';
 import { useAuth } from '../AuthProvider';
 import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import { FaUserCircle, FaCamera } from 'react-icons/fa';
 import { notifySuccess, notifyError } from '../notificationUtils';
 import { Container, Form, Button, Row, Col } from 'react-bootstrap';
+import DeleteUserModal from './DeleteUserModal';
 
 const Perfil = () => {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [editing, setEditing] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const initialFormData = {
     username: '',
     firstname: '',
@@ -78,8 +82,21 @@ const Perfil = () => {
     setFormData({ ...originalFormData });
   };
 
+  const handleShowDeleteModal = () => {
+    console.log("User", user);
+    setUserToDelete(user);
+    setShowDeleteModal(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setUserToDelete(null);
+    setShowDeleteModal(false);
+  };
+
   const handleDelete = () => {
     console.log("Delete", formData);
+    handleCloseDeleteModal();
+    logout();
   };
 
   const handleAvatarChange = (e) => {
@@ -94,6 +111,7 @@ const Perfil = () => {
 
   return (
     <Container className="mt-5 d-flex justify-content-center">
+      <ToastContainer />
       <Row className="justify-content-center">
         <Col md={6} className="d-flex">
           <div className="d-flex flex-column align-items-center position-relative">
@@ -177,7 +195,7 @@ const Perfil = () => {
                 <Col md={6}>
                   { editing
                     ? (<Button variant="secondary" onClick={handleCancel} className="w-100">Cancelar</Button>)
-                    : (<Button variant="danger" onClick={handleDelete} className="w-100">Eliminar perfil</Button>)
+                    : (<Button variant="danger" onClick={handleShowDeleteModal} className="w-100">Eliminar perfil</Button>)
                   }
                 </Col>
               </Row>
@@ -185,6 +203,12 @@ const Perfil = () => {
           </div>
         </Col>
       </Row>
+
+      <DeleteUserModal
+        show={showDeleteModal}
+        handleClose={handleCloseDeleteModal}
+        handleDelete={handleDelete}
+        user={userToDelete}/>
     </Container>
   );
 };

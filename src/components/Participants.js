@@ -18,7 +18,7 @@ const columns = [
     _style: { width: '1%' },
   },
   {
-    key: 'name',
+    key: 'full_name',
     label: 'Nombre',
     _style: { width: '30%' },
   },
@@ -126,39 +126,12 @@ const Participants = () => {
     <Container className="mt-5">
       <ToastContainer />
       <DataTable
-        handleModalShow={handleModalShow}
         showLoading={showLoading}
         items={participants}
         columns={columns}
         scopedColumns={scopedColumns}
         title="Listado de Participantes"
       />
-
-      <Modal show={showModal} onHide={handleModalClose} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Agregar Participante</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-        <Form>
-          <Form.Group className="mb-3 w-100" controlId="participant-name">
-            <Form.Label>Nombre</Form.Label>
-            <Form.Control type="text" name="name" value={participantData.name} onChange={handleInputChange} />
-          </Form.Group>
-
-          <Form.Group className="mb-3 w-100" controlId="participant-email">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" name="email" value={participantData.email} onChange={handleInputChange} />
-          </Form.Group>
-        </Form>
-        </Modal.Body>
-        <Modal.Footer>
-          <CButton color="primary" onClick={handleSubmit} disabled={showLoading}>
-            {showLoading && <CSpinner component="span" size="sm" aria-hidden="true" />}
-            {showLoading ? "Guardando..." : "Guardar"}
-          </CButton>
-          <Button variant="secondary" onClick={handleModalClose}>Cerrar</Button>
-        </Modal.Footer>
-      </Modal>
     </Container>
   );
 };
